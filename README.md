@@ -1,3 +1,2 @@
 # UnityMoblieNotificationSample
-unity-webviewを使用したUnityのWebView実装サンプル
-https://github.com/gree/unity-webview
+PackageManagerに導入される「Mobile Notifications」を使用した、モバイル通知の実装例
