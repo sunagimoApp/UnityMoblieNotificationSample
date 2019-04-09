@@ -70,7 +70,7 @@ public class AndroidNotificationController
     /// <param name="notificationId">通知Id。</param>
     static public void SendAndroidNotification(string title, string detail, DateTime notificationTime, int notificationId)
     {
-        var notification = CommonCreateNotification(title, detail, notificationTime);
+        var notification = CreateCommonNotification(title, detail, notificationTime);
         StackAndroidNotificationData(notification, ANDROID_NOTIFICATION_CHANNEL_ID, notificationId);
     }
 
@@ -84,7 +84,7 @@ public class AndroidNotificationController
     /// <param name="repeatInterval">繰り返し通知間隔。</param>
     static public void SendRepeatAndroidNotification(string title, string detail, DateTime notificationTime, int notificationId, TimeSpan? repeatInterval)
     {
-        var notification = CommonCreateNotification(title, detail, notificationTime);
+        var notification = CreateCommonNotification(title, detail, notificationTime);
         notification.RepeatInterval =  repeatInterval;
         StackAndroidNotificationData(notification, ANDROID_NOTIFICATION_CHANNEL_ID, notificationId);
     }
@@ -96,7 +96,7 @@ public class AndroidNotificationController
     /// <param name="detail">詳細。</param>
     /// <param name="notificationTime">通知時間。</param>
     /// <returns>Androidの通知データ。</returns>
-    static public AndroidNotification CommonCreateNotification(string title, string detail, DateTime notificationTime)
+    static public AndroidNotification CreateCommonNotification(string title, string detail, DateTime notificationTime)
     {
         InitializeIfNotInitialized();
 
@@ -121,7 +121,7 @@ public class AndroidNotificationController
         // すでにスタックに登録されているId、通知時間がすぎているもの、リピート時間が設定されていなければ削除する。
         androidNotificationStackList.RemoveAll(
             e => (e.NotificationId == notificationId || 
-            e.HasNowTimeExceededFireTime()) &&
+            e.IsNowTimeExceededFireTime()) &&
             e.IsRepeatIntervalTimeSpanZero()
         );
     
@@ -173,7 +173,7 @@ public class AndroidNotificationController
     static public void ResumeAndroidNotificationAction()
     {
         // スケジュール登録されている通知をすべてキャンセルする。
-        AllCancelAndroidNotification();
+        CancelAllAndroidNotification();
     }
 
     /// <summary>
@@ -193,14 +193,14 @@ public class AndroidNotificationController
 
         // 通知時間がすぎているもの、繰り返し時間が設定されていなければ削除する。
         androidNotificationStackList.RemoveAll(
-            e => e.HasNowTimeExceededFireTime() && e.IsRepeatIntervalTimeSpanZero()
+            e => e.IsNowTimeExceededFireTime() && e.IsRepeatIntervalTimeSpanZero()
         );
 
         SavePrefsNotificationData();
 
         foreach(var androidNotificationStackData in androidNotificationStackList)
         {
-            var notificationData = CommonCreateNotification(androidNotificationStackData.Title, androidNotificationStackData.Text, androidNotificationStackData.FireTime);
+            var notificationData = CreateCommonNotification(androidNotificationStackData.Title, androidNotificationStackData.Text, androidNotificationStackData.FireTime);
             if(!androidNotificationStackData.IsRepeatIntervalTimeSpanZero())
             {
                 notificationData.RepeatInterval = androidNotificationStackData.RepeatInterval;
@@ -217,7 +217,7 @@ public class AndroidNotificationController
     /// <summary>
     /// Androidの全ての通知をキャンセルする。
     /// </summary>
-    static public void AllCancelAndroidNotification()
+    static public void CancelAllAndroidNotification()
     {
         LoadPrefsNotificationData();
         AndroidNotificationCenter.CancelAllNotifications();

@@ -82,7 +82,7 @@ public class AndroidNotificationStackData
     /// 通知時間が現在の時間を超えているかどうか。
     /// </summary>
     /// <returns>通知時間が現在の時間を超えているかどうか。</returns>
-    public bool HasNowTimeExceededFireTime()
+    public bool IsNowTimeExceededFireTime()
     {
         return FireTime <= DateTime.Now;
     }
