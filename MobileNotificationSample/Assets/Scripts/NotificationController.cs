@@ -7,40 +7,40 @@ using System.Diagnostics;
 public class NotificationController
 {
     /// <summary>
-    /// 通知タイプ。
+    /// 通知一覧。
     /// </summary>
-    public enum NotificationType
+    public enum Notifications
     {
         /// <summary>
-        /// 通知タイプ1。
+        /// 通知1。
         /// </summary>
-        TYPE_1 = 0,
+        NOTIFICATION_1 = 0,
         
         /// <summary>
-        /// 通知タイプ2。
+        /// 通知2。
         /// </summary>
-        TYPE_2 = 1,
+        NOTIFICATION_2 = 1,
 
         /// <summary>
-        /// 通知タイプ3。
+        /// 通知3。
         /// </summary>
-        TYPE_3 = 2,
+        NOTIFICATION_3 = 2,
     }
 
     /// <summary>
-    /// 通知タイプをIDに変換。
+    /// 通知一覧をIDに変換。
     /// </summary>
     /// <param name="type">通知タイプ。</param>
     /// <returns>通知タイプID。</returns>
-    static public int NotificationTypeToId(NotificationType type)
+    static public int ToIdNotifications(Notifications notification)
     {
-        switch(type)
+        switch(notification)
         {
-            case NotificationType.TYPE_1:
+            case Notifications.NOTIFICATION_1:
                 return 1;
-            case NotificationType.TYPE_2:
+            case Notifications.NOTIFICATION_2:
                 return 2;
-            case NotificationType.TYPE_3:
+            case Notifications.NOTIFICATION_3:
                 return 3;
             default:
                 return 0;
@@ -107,9 +107,9 @@ public class NotificationController
     /// <param name="notificationType">通知タイプ。</param>
     /// <param name="isRepeat">繰り返し通知するか。</param>
     /// <param name="repeatInterval">繰り返し通知間隔。</param>
-    static public void SendNotification(string title, string detail, DateTime notificationTime, NotificationType notificationType, bool isRepeat = false, TimeSpan? repeatInterval = null)
+    static public void SendNotification(string title, string detail, DateTime notificationTime, Notifications notificationType, bool isRepeat = false, TimeSpan? repeatInterval = null)
     {
-        var notificationId = NotificationTypeToId(notificationType);
+        var notificationId = ToIdNotifications(notificationType);
 #if UNITY_ANDROID
         if(isRepeat && repeatInterval != null)
         {
@@ -133,9 +133,9 @@ public class NotificationController
     /// <param name="notificationType">通知タイプ。</param>
     /// <param name="isRepeat">繰り返し通知するか。</param>
     /// <param name="repeatInterval">繰り返し通知間隔。</param>
-    static public void SendNotification(string title, string detail, TimeSpan notificationTimeInterval, NotificationType notificationType, bool isRepeat = false, TimeSpan? repeatInterval = null)
+    static public void SendNotification(string title, string detail, TimeSpan notificationTimeInterval, Notifications notificationType, bool isRepeat = false, TimeSpan? repeatInterval = null)
     {
-        var notificationId = NotificationTypeToId(notificationType);
+        var notificationId = ToIdNotifications(notificationType);
         var notificationTime = DateTime.Now + notificationTimeInterval;
 #if UNITY_ANDROID
         if(isRepeat && repeatInterval != null)
@@ -154,12 +154,12 @@ public class NotificationController
     /// <summary>
     /// 全ての通知をキャンセルする。
     /// </summary>
-    static public void AllCancelNotification()
+    static public void CancelAllNotification()
     {
 #if UNITY_ANDROID
-        AndroidNotificationController.AllCancelAndroidNotification();
+        AndroidNotificationController.CancelAllAndroidNotification();
 #elif UNITY_IOS
-        IOSNotificationController.AllCancelIOSNotification();
+        IOSNotificationController.CancelAllIOSNotification();
 #endif
     }
 
@@ -180,9 +180,9 @@ public class NotificationController
     /// 通知をキャンセルする。
     /// </summary>
     /// <param name="notificationType">通知タイプ。</param>
-    static public void CancelNotification(NotificationType notificationType)
+    static public void CancelNotification(Notifications notificationType)
     {
-        var notificationId = NotificationTypeToId(notificationType);
+        var notificationId = ToIdNotifications(notificationType);
 #if UNITY_ANDROID
         AndroidNotificationController.CancelAndroidNotificationIfScheduled(notificationId);
 #elif UNITY_IOS
@@ -201,6 +201,8 @@ public class NotificationController
         return AndroidNotificationController.IsScheduledAndroidNotification(notificationId);
 #elif UNITY_IOS
         return IOSNotificationController.IsScheduledIOSNotification(notificationId.ToString());
+#else
+        return false;
 #endif
     }
 
@@ -209,13 +211,15 @@ public class NotificationController
     /// </summary>
     /// <param name="notificationType">通知タイプ。</param>
     /// <returns>スケジュールされている通知かどうか。</returns>
-    static public bool IsScheduledNotification(NotificationType notificationType)
+    static public bool IsScheduledNotification(Notifications notificationType)
     {
-        var notificationId = NotificationTypeToId(notificationType);
+        var notificationId = ToIdNotifications(notificationType);
 #if UNITY_ANDROID
         return AndroidNotificationController.IsScheduledAndroidNotification(notificationId);
 #elif UNITY_IOS
         return IOSNotificationController.IsScheduledIOSNotification(notificationId.ToString());
+#else 
+        return false;
 #endif
     }
 }

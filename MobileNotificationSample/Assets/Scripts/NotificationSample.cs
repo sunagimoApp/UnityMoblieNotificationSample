@@ -7,75 +7,75 @@ using UnityEngine.UI;
 public class NotificationSample : MonoBehaviour
 {
     /// <summary>
-    /// 10秒後に通知を送る(TimeSpan)ボタン。
+    /// TimeSpanで10秒後に通知を送るボタン。
     /// </summary>
-    [Header("10秒後に通知を送る(TimeSpan)ボタン")]
+    [Header("TimeSpanで10秒後に通知を送るボタン")]
     [SerializeField]
-    Button After10SencondsTimeSpanBtn = null;
+    Button sendNotificationAfter10SecondsBtnByTimeSpanBtn = null;
 
     /// <summary>
     /// 10秒後に通知を送る(DateTime)ボタン。
     /// </summary>
-    [Header("10秒後に通知を送る(DateTime)ボタン")]
+    [Header("DateTimeで10秒後に通知を送るボタン")]
     [SerializeField]
-    Button After10SencondsDateTimeBtn = null;
+    Button sendNotificationAfter10SecondsBtnByDateTime = null;
 
     /// <summary>
     /// 1分後に繰り返し通知を送るボタン。
     /// </summary>
     [Header("1分後に繰り返し通知を送るボタン")]
     [SerializeField]
-    Button After1MinuteRepeatBtn = null;
+    Button SendRepeatNotificationAfter1MinuteBtn = null;
 
     /// <summary>
     /// 通知をすべてキャンセルするボタン。
     /// </summary>
     [Header("通知をすべてキャンセルするボタン。")]
     [SerializeField]
-    Button AllNotificationCancelBtn = null;
+    Button cancelAllNotificationBtn = null;
 
     void Start()
     {
-        After10SencondsTimeSpanBtn.onClick.AddListener(SendNotificationAfter10SecondsTimeSpan);
-        After10SencondsDateTimeBtn.onClick.AddListener(SendNotificationAfter10SecondsDateTime);
-        After1MinuteRepeatBtn.onClick.AddListener(SendRepeatNotificationAfter1Minute);
-        AllNotificationCancelBtn.onClick.AddListener(AllNotificationCancel);
+        sendNotificationAfter10SecondsBtnByTimeSpanBtn.onClick.AddListener(OnSendNotificationAfter10SecondsByTimeSpan);
+        sendNotificationAfter10SecondsBtnByDateTime.onClick.AddListener(OnSendNotificationAfter10SecondsByDateTime);
+        SendRepeatNotificationAfter1MinuteBtn.onClick.AddListener(OnSendRepeatNotificationAfter1Minute);
+        cancelAllNotificationBtn.onClick.AddListener(OnCancelAllNotifications);
     }
     
     /// <summary>
-    /// 10秒後に通知を送信。
+    /// TimeSpanで10秒後に通知を送信。
     /// </summary>
-    void SendNotificationAfter10SecondsTimeSpan()
+    void OnSendNotificationAfter10SecondsByTimeSpan()
     {
         var notificationTimeInterval = new TimeSpan(0, 0, 10);
-        NotificationController.SendNotification("通知テスト", "10秒後に通知(TimeSpan)", notificationTimeInterval, NotificationController.NotificationType.TYPE_1);
+        NotificationController.SendNotification("通知テスト", "10秒後に通知(TimeSpan)", notificationTimeInterval, NotificationController.Notifications.NOTIFICATION_1);
     }
 
     /// <summary>
-    /// 10秒後に通知を送信。
+    /// DateTimeで10秒後に通知を送信。
     /// </summary>
-    void SendNotificationAfter10SecondsDateTime()
+    void OnSendNotificationAfter10SecondsByDateTime()
     {
         var notificationDateTime = DateTime.Now + new TimeSpan(0, 0, 10);
-        NotificationController.SendNotification("通知テスト", "10秒後に通知(DateTime)", notificationDateTime, NotificationController.NotificationType.TYPE_1);
+        NotificationController.SendNotification("通知テスト", "10秒後に通知(DateTime)", notificationDateTime, NotificationController.Notifications.NOTIFICATION_1);
     }
 
     /// <summary>
     /// 1分後に繰り返し通知送信。
     /// </summary>
-    void SendRepeatNotificationAfter1Minute()
+    void OnSendRepeatNotificationAfter1Minute()
     {
         var notificationDateTime = DateTime.Now + new TimeSpan(0, 1, 0);
         var repeatInterval = new TimeSpan(0, 1, 0);
-        NotificationController.SendNotification("通知テスト", "1分後に繰り返し通知", notificationDateTime, NotificationController.NotificationType.TYPE_1, true, repeatInterval);
+        NotificationController.SendNotification("通知テスト", "1分後に繰り返し通知", notificationDateTime, NotificationController.Notifications.NOTIFICATION_1, true, repeatInterval);
     }
     
     /// <summary>
     /// 全ての通知をキャンセルする。
     /// </summary>
-    void AllNotificationCancel()
+    void OnCancelAllNotifications()
     {
-        NotificationController.AllCancelNotification();
+        NotificationController.CancelAllNotification();
     }
 
     void OnApplicationPause(bool isPause)

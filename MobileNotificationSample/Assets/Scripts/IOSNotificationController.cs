@@ -19,7 +19,7 @@ public class IOSNotificationController
         CancelIOSNotificationIfScheduled(identifier);
 
         // 通知を作成。
-        var notification = CommonCreateNotification(title, detail, identifier);
+        var notification = CreateCommonNotification(title, detail, identifier);
 
         // 通知時間を設定。
         var timeTrigger = new iOSNotificationTimeIntervalTrigger();
@@ -46,7 +46,7 @@ public class IOSNotificationController
         CancelIOSNotificationIfScheduled(identifier);
 
         // 通知を作成。
-        var notification = CommonCreateNotification(title, detail, identifier);
+        var notification = CreateCommonNotification(title, detail, identifier);
 
         // 通知時間を設定。
         var timeTrigger = new iOSNotificationCalendarTrigger();
@@ -70,7 +70,7 @@ public class IOSNotificationController
     /// <param name="detail">詳細。</param>
     /// <param name="identifier">識別子。</param>
     /// <returns>通知データ。</returns>
-    static iOSNotification CommonCreateNotification(string title, string detail, string identifier)
+    static iOSNotification CreateCommonNotification(string title, string detail, string identifier)
     {
         // 通知を作成。
         var notification = new iOSNotification();
@@ -83,7 +83,7 @@ public class IOSNotificationController
     /// <summary>
     /// iOSの通知を全てキャンセルする。
     /// </summary>
-    static public void AllCancelIOSNotification()
+    static public void CancelAllIOSNotification()
     {
         iOSNotificationCenter.RemoveAllScheduledNotifications();
     }
